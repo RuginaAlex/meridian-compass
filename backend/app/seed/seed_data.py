@@ -1,10 +1,4 @@
-"""Populates the database with demo data: people, the onboarding task
-templates, resources, and three employees in different onboarding
-situations (see README for the full story behind each one).
 
-Run with:  python -m app.seed.seed_data
-(from inside backend/, with the virtualenv active)
-"""
 from datetime import date, timedelta
 
 from app import create_app

@@ -124,6 +124,27 @@ class TestTaskRoutes:
         assert second_attempt.status_code == 400
 
 
+class TestBlockerRoutes:
+    def test_list_blockers_for_employee(self, client, sample_templates):
+        response = client.post("/api/employees", json=_create_employee_payload())
+        employee_id = response.get_json()["id"]
+        tasks = client.get(f"/api/tasks/employee/{employee_id}").get_json()
+
+        client.post(
+            f"/api/tasks/{tasks[0]['id']}/block",
+            json={"reason": "I need more information", "message": "Not sure what this means."},
+        )
+
+        blockers = client.get(f"/api/blockers/employee/{employee_id}").get_json()
+        assert len(blockers) == 1
+        assert blockers[0]["reason"] == "I need more information"
+        assert blockers[0]["message"] == "Not sure what this means."
+
+    def test_list_blockers_for_missing_employee_returns_404(self, client):
+        response = client.get("/api/blockers/employee/9999")
+        assert response.status_code == 404
+
+
 class TestHrDashboard:
     def test_dashboard_flags_employee_with_blocked_task(self, client, sample_templates):
         response = client.post("/api/employees", json=_create_employee_payload())

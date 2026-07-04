@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Compass, LayoutDashboard, Map, Users, BookOpen, ShieldCheck } from "lucide-react";
+import { Compass, LayoutDashboard, Map, Users, BookOpen, ShieldCheck, UserPlus } from "lucide-react";
 import { useRole } from "../context/RoleContext";
 import { getEmployees } from "../api/employees";
 import type { Employee } from "../types";
@@ -71,9 +71,14 @@ export function Layout() {
               </NavLink>
             </>
           ) : (
-            <NavLink to="/hr" className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>
-              <ShieldCheck /> HR Dashboard
-            </NavLink>
+            <>
+              <NavLink to="/hr" end className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>
+                <ShieldCheck /> HR Dashboard
+              </NavLink>
+              <NavLink to="/hr/add-employee" className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}>
+                <UserPlus /> Add Employee
+              </NavLink>
+            </>
           )}
         </nav>
 

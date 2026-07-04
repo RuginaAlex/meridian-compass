@@ -5,7 +5,9 @@ import { EmployeeDashboard } from "./pages/EmployeeDashboard";
 import { OnboardingJourney } from "./pages/OnboardingJourney";
 import { People } from "./pages/People";
 import { Resources } from "./pages/Resources";
-import { HRDashboardPlaceholder } from "./pages/HRDashboardPlaceholder";
+import { HRDashboard } from "./pages/HRDashboard";
+import { EmployeeDetails } from "./pages/EmployeeDetails";
+import { AddEmployee } from "./pages/AddEmployee";
 
 export default function App() {
   return (
@@ -18,7 +20,9 @@ export default function App() {
             <Route path="/journey" element={<OnboardingJourney />} />
             <Route path="/people" element={<People />} />
             <Route path="/resources" element={<Resources />} />
-            <Route path="/hr" element={<HRDashboardPlaceholder />} />
+            <Route path="/hr" element={<HRDashboard />} />
+            <Route path="/hr/employees/:id" element={<EmployeeDetails />} />
+            <Route path="/hr/add-employee" element={<AddEmployee />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Routes>

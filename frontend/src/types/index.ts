@@ -94,6 +94,37 @@ export interface Resource {
   link: string | null;
 }
 
+// The shape of GET /api/hr/dashboard. Each needs_attention bucket holds
+// the employee plus, where relevant, how many tasks triggered the flag
+// (a missing manager/buddy is binary, so those entries have no count).
+export interface NeedsAttentionEntry {
+  employee: Employee;
+  count?: number;
+}
+
+export interface NeedsAttention {
+  blocked: NeedsAttentionEntry[];
+  overdue: NeedsAttentionEntry[];
+  missing_manager: NeedsAttentionEntry[];
+  missing_buddy: NeedsAttentionEntry[];
+}
+
+export interface HrDashboardData {
+  employees: Employee[];
+  needs_attention: NeedsAttention;
+}
+
+export interface NewEmployeeInput {
+  first_name: string;
+  last_name: string;
+  email: string;
+  job_title: string;
+  department: Department;
+  start_date: string;
+  manager_id?: number | null;
+  buddy_id?: number | null;
+}
+
 export const TASK_STAGES: TaskStage[] = [
   "Before the first day",
   "First day",
