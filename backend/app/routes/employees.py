@@ -30,7 +30,7 @@ def list_employees():
 
 @employees_bp.get("/<int:employee_id>")
 def get_employee(employee_id):
-    employee = Employee.query.get(employee_id)
+    employee = db.session.get(Employee, employee_id)
     if employee is None:
         return jsonify({"error": "Employee not found"}), 404
 

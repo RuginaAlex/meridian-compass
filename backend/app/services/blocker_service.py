@@ -2,7 +2,7 @@
 of this app. Kept in its own service so the blocking/resolving rules can
 be unit tested in isolation from the HTTP layer.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.extensions import db
 from app.models.blocker import Blocker
@@ -41,9 +41,9 @@ def resolve_blocker(blocker: Blocker) -> Blocker:
     once they've unblocked someone, the ball is back in the employee's court.
     """
     blocker.status = BlockerStatus.RESOLVED
-    blocker.resolved_at = datetime.utcnow()
+    blocker.resolved_at = datetime.now(timezone.utc)
 
-    task = OnboardingTask.query.get(blocker.task_id)
+    task = db.session.get(OnboardingTask, blocker.task_id)
     if task and task.status == TaskStatus.BLOCKED:
         task.status = TaskStatus.IN_PROGRESS
         refresh_onboarding_status(task.employee)

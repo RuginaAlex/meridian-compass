@@ -1,10 +1,17 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.extensions import db
 from app.models.enums import BlockerReason, BlockerStatus
 
 
 class Blocker(db.Model):
+    """A specific reason why one task got stuck, reported by the employee.
+
+    employee_id duplicates what task.employee_id already tells us. It's
+    kept anyway so the HR dashboard can query "all open blockers for
+    employee X" directly, without an extra join through OnboardingTask.
+    A deliberate simplicity trade-off, not an oversight (see DECISIONS.md).
+    """
 
     __tablename__ = "blockers"
 
@@ -16,7 +23,9 @@ class Blocker(db.Model):
     message = db.Column(db.Text, nullable=True)
     status = db.Column(db.Enum(BlockerStatus), nullable=False, default=BlockerStatus.OPEN)
 
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
     resolved_at = db.Column(db.DateTime, nullable=True)
 
     def to_dict(self):

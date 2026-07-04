@@ -12,7 +12,7 @@ tasks_bp = Blueprint("tasks", __name__)
 
 @tasks_bp.get("/employee/<int:employee_id>")
 def list_tasks_for_employee(employee_id):
-    employee = Employee.query.get(employee_id)
+    employee = db.session.get(Employee, employee_id)
     if employee is None:
         return jsonify({"error": "Employee not found"}), 404
 
@@ -24,7 +24,7 @@ def list_tasks_for_employee(employee_id):
 
 @tasks_bp.post("/<int:task_id>/complete")
 def complete_task(task_id):
-    task = OnboardingTask.query.get(task_id)
+    task = db.session.get(OnboardingTask, task_id)
     if task is None:
         return jsonify({"error": "Task not found"}), 404
 
@@ -36,7 +36,7 @@ def complete_task(task_id):
 
 @tasks_bp.post("/<int:task_id>/block")
 def block_task(task_id):
-    task = OnboardingTask.query.get(task_id)
+    task = db.session.get(OnboardingTask, task_id)
     if task is None:
         return jsonify({"error": "Task not found"}), 404
 
