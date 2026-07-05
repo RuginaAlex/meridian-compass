@@ -1,10 +1,4 @@
-"""Business logic around onboarding: generating a plan for a new employee,
-and computing progress / overdue / needs-attention information.
 
-Kept out of the routes on purpose - routes should stay thin (parse the
-request, call a service, return JSON) so this logic can be unit tested
-directly with pytest, without spinning up HTTP requests.
-"""
 from datetime import date, timedelta
 
 from app.extensions import db
@@ -16,11 +10,7 @@ from app.models.template import OnboardingTaskTemplate
 
 
 def _resolve_contact(employee: Employee, contact_role: ContactRole | None):
-    """Turn a template's abstract contact_role into a real Person for this
-    employee. Falls back to None (rather than raising) when the company's
-    data is incomplete - e.g. no buddy assigned yet - so task generation
-    never crashes because of missing setup.
-    """
+
     if contact_role is None:
         return None
 
@@ -38,13 +28,7 @@ def _resolve_contact(employee: Employee, contact_role: ContactRole | None):
 
 
 def generate_onboarding_plan(employee: Employee):
-    """Create one OnboardingTask per OnboardingTaskTemplate for this employee.
 
-    This is the single place where "what does onboarding look like" gets
-    turned into real, due-dated tasks. Both the demo seed data and the
-    "Add Employee" HR form call this function, so the plan is only ever
-    defined once (in the templates table).
-    """
     templates = OnboardingTaskTemplate.query.order_by(
         OnboardingTaskTemplate.stage, OnboardingTaskTemplate.order
     ).all()
@@ -73,13 +57,7 @@ def generate_onboarding_plan(employee: Employee):
 
 
 def calculate_progress(employee: Employee) -> int:
-    """Percentage of the employee's tasks that are Completed.
 
-    Deliberately recomputed from the tasks every time, instead of being
-    stored as a column on Employee - with a handful of tasks per employee
-    this is cheap, and it removes an entire class of "progress became
-    stale after a task changed" bugs.
-    """
     tasks = employee.tasks
     if not tasks:
         return 0
@@ -97,11 +75,7 @@ def get_blocked_tasks(employee: Employee):
 
 
 def refresh_onboarding_status(employee: Employee):
-    """Keep onboarding_status roughly in sync with task completion.
 
-    Simple rule, intentionally: no tasks touched yet -> Not started;
-    everything completed -> Completed; anything in between -> In progress.
-    """
     tasks = employee.tasks
     if not tasks:
         employee.onboarding_status = OnboardingStatus.NOT_STARTED
@@ -114,12 +88,7 @@ def refresh_onboarding_status(employee: Employee):
 
 
 def get_needs_attention():
-    """Employees HR should look at right now: blocked tasks, overdue tasks,
-    or missing manager/buddy. Used by the HR dashboard's "Needs attention"
-    section - this is the whole point of the app, so it lives here as a
-    single, directly testable function rather than being assembled ad-hoc
-    in a route.
-    """
+
     employees = Employee.query.all()
     attention = {
         "blocked": [],
