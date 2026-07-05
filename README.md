@@ -182,5 +182,20 @@ The seed data creates three employees in different situations, on purpose:
 
 ## Screenshots
 
-See the [`screenshots/`](screenshots/) folder for a walkthrough of both the
-New Employee and HR views.
+**New Employee dashboard** - today's priorities, blocked tasks, and the
+waypoint progress tracker
+
+![Employee dashboard](screenshots/01-employee-dashboard.png)
+
+**Reporting a blocker** - the "I'm blocked" modal, with a reason and an
+optional note
+
+![I'm blocked modal](screenshots/02-blocked-task-modal.png)
+
+**HR dashboard** - everyone currently onboarding, and the "Needs attention" feed
+
+![HR dashboard](screenshots/03-hr-dashboard.png)
+
+**Employee details for HR** - the exact blocker reason, with a one-click resolve
+
+![Employee details](screenshots/04-employee-details.png)
